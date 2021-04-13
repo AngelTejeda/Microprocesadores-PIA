@@ -13,6 +13,8 @@
 #define TX 3
 #define DISABLE_PIN 5
 #define BUZZER_PIN 7
+#define RED_LED 12
+#define GREEN_LED 13
 
 SoftwareSerial esp8266(RX, TX);
 ESP8266 wifi(esp8266);
@@ -43,15 +45,38 @@ void setup()
 
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(DISABLE_PIN, INPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
 
+  digitalWrite(BUZZER_PIN, LOW);
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, LOW);
+
+  /*
   Serial.print("ESP: ");
   Serial.println(initializeESP() ? ok : fail);
 
   Serial.print("MPU: ");
   Serial.println(initializeMPU() ? ok : fail);
+  */
 
-  //if(initializeESP() && initializeMPU())
-  //  TURN ON GREEN LED, ELSE TURN ON RED LED
+  Serial.print("ESP: ");
+  bool espInit = initializeESP();
+  Serial.println(espInit ? ok : fail);
+
+  Serial.print("MPU: ");
+  bool mpuInit = initializeMPU();
+  Serial.println(mpuInit ? ok : fail);
+
+  if(espInit && mpuInit) {
+    digitalWrite(GREEN_LED, HIGH);
+  }
+  else {
+    digitalWrite(RED_LED, HIGH);
+
+    while(true);
+  }
+    
 }
 
 void loop()
@@ -372,6 +397,8 @@ void BuildAnswer(char *answer, char *json)
 //---------//
 void SetAlarm() {
   alarmSet = true;
+
+  CalculateMpuOffsets();
 }
 
 void DisableAlarm() {
@@ -380,6 +407,9 @@ void DisableAlarm() {
 }
 
 void TurnAlarmOn() {
+  if(!alarmSet)
+    return;
+   
   alarmActive = true;
   
   panicMode();
