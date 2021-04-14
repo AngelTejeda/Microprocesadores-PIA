@@ -12,9 +12,9 @@
 #define RX 2
 #define TX 3
 #define DISABLE_PIN 5
-#define BUZZER_PIN 7
-#define RED_LED 12
-#define GREEN_LED 13
+#define RED_LED 8
+#define GREEN_LED 9
+#define BUZZER_PIN 13
 
 SoftwareSerial esp8266(RX, TX);
 ESP8266 wifi(esp8266);
