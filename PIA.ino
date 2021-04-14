@@ -4,7 +4,7 @@
 #include <MPU6050_light.h>
 #include <Wire.h>
 
-#include "AP.h"
+#include "WifiAuthentication.h"
 
 #define BAUD_RATE 9600
 
